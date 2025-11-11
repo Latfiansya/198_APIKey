@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate API Key</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at 20% 20%, #1e1e2f, #111);
+      color: white;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: background 0.3s ease;
+    }
+
+    .glass:hover {
+      background: rgba(255, 255, 255, 0.12);
+      /* tidak ada efek naik lagi */
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      /* tanpa efek scale */
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+  <div class="glass rounded-2xl p-8 w-full max-w-md text-center">
+    <h1 class="text-2xl font-bold mb-3">Generate API Key</h1>
+    <p class="text-gray-300 mb-6 text-sm">
+      Klik tombol di bawah untuk membuat API key acak yang aman.
+    </p>
+
+    <textarea id="apiKey" rows="3" readonly
+      class="w-full p-3 text-gray-100 bg-gray-900/50 border border-gray-700 rounded-lg focus:outline-none cursor-default"></textarea>
+
+    <button id="generateBtn"
+      class="btn mt-6 w-full py-3 rounded-lg font-semibold text-white shadow-md">
+      Generate API Key
+    </button>
+
+    <p id="message" class="mt-4 text-sm opacity-0 transition-all duration-500"></p>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById('generateBtn');
+    const apiKeyField = document.getElementById('apiKey');
+    const message = document.getElementById('message');
+
+    function generateApiKey(length = 32) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let key = 'sk-';
+      for (let i = 0; i < length; i++) {
+        key += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return key;
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const newKey = generateApiKey();
+      apiKeyField.value = newKey;
+      message.textContent = 'API key berhasil digenerate!';
+      message.classList.remove('text-red-400');
+      message.classList.add('text-green-400');
+      message.style.opacity = 1;
+
+      setTimeout(() => (message.style.opacity = 0), 2000);
+    });
+  </script>
+</body>
+</html>
