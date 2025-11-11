@@ -21,11 +21,6 @@
 
     .glass:hover {
       background: rgba(255, 255, 255, 0.12);
-      /* tidak ada efek naik lagi */
-    }
-
-    textarea {
-      resize: none;
     }
 
     .btn {
@@ -35,22 +30,66 @@
 
     .btn:hover {
       background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      /* tanpa efek scale */
+    }
+
+    /* Tombol Copy gaya ChatGPT */
+    .copy-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #cfcfcf;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0;
+    }
+
+    .copy-container:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .code-box {
+      background: #1e1e2f;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 1rem;
+      position: relative;
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: #e2e2e2;
+      overflow-x: auto;
+      min-height: 60px;
     }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
-  <div class="glass rounded-2xl p-8 w-full max-w-md text-center">
+  <div class="glass rounded-2xl p-8 w-full max-w-md text-center relative">
     <h1 class="text-2xl font-bold mb-3">Generate API Key</h1>
     <p class="text-gray-300 mb-6 text-sm">
       Klik tombol di bawah untuk membuat API key acak yang aman.
     </p>
 
-    <textarea id="apiKey" rows="3" readonly
-      class="w-full p-3 text-gray-100 bg-gray-900/50 border border-gray-700 rounded-lg focus:outline-none cursor-default"></textarea>
+    <!-- Kotak kode seperti ChatGPT -->
+    <div class="copy-container relative mb-4">
+      <div id="apiKeyBox" class="code-box">
+        <span id="apiKeyText" class="text-gray-400 italic">Belum ada API key</span>
+      </div>
+      <button id="copyBtn" class="copy-btn">Copy API</button>
+    </div>
 
     <button id="generateBtn"
-      class="btn mt-6 w-full py-3 rounded-lg font-semibold text-white shadow-md">
+      class="btn mt-2 w-full py-2 rounded-lg font-semibold text-white shadow-md">
       Generate API Key
     </button>
 
@@ -59,7 +98,8 @@
 
   <script>
     const generateBtn = document.getElementById('generateBtn');
-    const apiKeyField = document.getElementById('apiKey');
+    const apiKeyText = document.getElementById('apiKeyText');
+    const copyBtn = document.getElementById('copyBtn');
     const message = document.getElementById('message');
 
     function generateApiKey(length = 32) {
@@ -73,13 +113,27 @@
 
     generateBtn.addEventListener('click', () => {
       const newKey = generateApiKey();
-      apiKeyField.value = newKey;
+      apiKeyText.textContent = newKey;
+      apiKeyText.classList.remove('text-gray-400', 'italic');
+
       message.textContent = 'API key berhasil digenerate!';
       message.classList.remove('text-red-400');
-      message.classList.add('text-green-400');
+      message.classList.add('t ext-green-400');
       message.style.opacity = 1;
-
       setTimeout(() => (message.style.opacity = 0), 2000);
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const key = apiKeyText.textContent.trim();
+      if (key === 'Belum ada API key') return;
+
+      try {
+        await navigator.clipboard.writeText(key);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => (copyBtn.textContent = 'Copy API'), 1500);
+      } catch (err) {
+        alert('Gagal menyalin API key.');
+      }
     });
   </script>
 </body>
