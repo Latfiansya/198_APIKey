@@ -1,5 +1,5 @@
 
-# Laporan Praktikum 7 PWS
+# Laporan Praktikum 5 PWS
 
 > Nama  : Latfiansya Dzikri\
 > NIM   : 20230140198\
